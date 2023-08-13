@@ -9,6 +9,7 @@ import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import org.json.JSONObject
 
 class MainActivity : AppCompatActivity() {
     val appTag: String = "TestApp"
@@ -36,13 +37,15 @@ class MainActivity : AppCompatActivity() {
         val textView = findViewById<TextView>(R.id.text)
 
         val queue = Volley.newRequestQueue(this)
-        val url = "https://juge6.jp"
+        val url = "http://10.0.2.2:3000"
 
         val stringRequest = StringRequest(Request.Method.GET, url,
             Response.Listener<String> { response ->
                 // Display the first 500 characters of the response string.
                 exportDebugLog("Success!")
-                textView.text = "Response is: ${response.substring(0, 500)}"
+                val json = JSONObject(response.toString())
+                exportDebugLog(json.getString("message"))
+                textView.text = "Response is: ${json.getString("message")}"
             },
             Response.ErrorListener {
                 Log.e(appTag,"Connection Error")
